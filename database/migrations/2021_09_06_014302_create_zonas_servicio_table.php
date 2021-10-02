@@ -30,9 +30,10 @@ class CreateZonasServicioTable extends Migration
             // ubicacion
             $table->integer('posicion');
 
-            // si supera el minimo de compra, su envio es gratis
-            $table->boolean('min_envio_gratis')->default(0);
-            // minimo de compra para envio gratis
+            // activar o desactivar, para dar nuevo costo de envio gratis
+            $table->boolean('min_envio_gratis');
+
+            // si el campo anterior esta activo, este sera el minimo para dar envio gratis
             $table->decimal('costo_envio_gratis', 10,2);
 
             // si el servicio dara envio gratis a esta zona, sin tocar el precio envio

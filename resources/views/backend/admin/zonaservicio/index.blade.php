@@ -510,11 +510,6 @@
                                     <input type="number" step="0.01" id="minenvio-filtro4">
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Nuevo Cargo a aplicar si supera la x cantidad</label>
-                                    <input type="number" step="0.01" id="nuevocargo-filtro4">
-                                </div>
-
                                 <div class="form-group" style="margin-left:20px">
                                     <label>Activar o Desactivar</label><br>
                                     <label class="switch" style="margin-top:10px">
@@ -1097,7 +1092,6 @@
             var values = $('#selectzona-filtro4').val();
             var servicios = $('#servicios-filtro4').val();
             var mincompra = document.getElementById("minenvio-filtro4").value;
-            var nuevocargo = document.getElementById("nuevocargo-filtro4").value;
             var check = document.getElementById('check4').checked;
 
             var toggleZona = check ? 1 : 0;
@@ -1132,26 +1126,6 @@
                 return;
             }
 
-            if(nuevocargo === ''){
-                toastMensaje('error', 'Nuevo cargo es requerido');
-                return;
-            }
-
-            if(!nuevocargo.match(reglaNumeroDecimal)) {
-                toastMensaje('error', 'Nuevo cargo requiere número decimal');
-                return;
-            }
-
-            if(nuevocargo < 0){
-                toastMensaje('error', 'Nuevo cargo no debe ser Negativo');
-                return;
-            }
-
-            if(nuevocargo > 100000){
-                toastMensaje('error', 'Nuevo cargo no debe ser mayor a 1 millón');
-                return;
-            }
-
             openLoading();
             var formData = new FormData();
             for (var i = 0; i < values.length; i++) {
@@ -1163,7 +1137,6 @@
 
             formData.append('cbzonapublico', toggleZona);
             formData.append('mincompra', mincompra);
-            formData.append('nuevocargo', nuevocargo);
 
             axios.post('/zonaservicios/modificar-min-gratis', formData, {
             })
