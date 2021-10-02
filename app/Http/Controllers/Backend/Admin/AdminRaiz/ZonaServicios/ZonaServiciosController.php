@@ -273,7 +273,8 @@ class ZonaServiciosController extends Controller
                 array_push($pilaArray, $p->id);
             }
 
-            // recorrer cada uno para actualizar
+            // recorrer cada uno para actualizar,
+
             foreach($pilaArray as $p){
                 ZonasServicio::where('id', $p)->update([
                     'min_envio_gratis' => $request->cbzonapublico,
