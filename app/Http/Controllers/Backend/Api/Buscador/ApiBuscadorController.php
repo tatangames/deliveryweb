@@ -124,7 +124,6 @@ class ApiBuscadorController extends Controller
 
             try {
 
-
                 // buscar zona de direccion del cliente
                 $infoDireccion = DireccionCliente::where('clientes_id', $request->id)
                     ->where('seleccionado', 1)->first();
@@ -159,6 +158,9 @@ class ApiBuscadorController extends Controller
                     6 => 7, // sabado
                 ];
 
+
+               // return [$pilaServicios];
+
                 // hora y fecha
                 $getValores = Carbon::now('America/El_Salvador');
                 $getDiaHora = $getValores->dayOfWeek;
@@ -168,15 +170,15 @@ class ApiBuscadorController extends Controller
                 // servicios para la zona
                 $servicios = DB::table('zonas_servicio AS z')
                     ->join('servicios AS s', 's.id', '=', 'z.servicios_id')
-                    ->select('s.id AS idServicio', 's.nombre AS nombreServicio',
+                    ->select('s.id', 's.nombre AS nombreServicio',
                         's.descripcion', 's.imagen', 'z.id AS zonaservicioid',
                         's.logo', 's.tipo_vista', 's.privado', 's.cerrado_emergencia', 's.mensaje_cerrado',
                         'z.posicion', 'z.zonas_id')
                     ->whereIn('s.id', $pilaServicios) // listado de ID servicio
                     ->where('z.activo', 1) // activo de zona servicios para esta zona
                     ->where('s.activo', 1) // activo el servicio globalmente
+                        ->where('z.zonas_id', $infoDireccion->zonas_id)
                     ->orderBy('z.posicion', 'ASC')
-                    ->distinct()
                     ->get();
 
                 // horario delivery para esa zona
@@ -188,7 +190,7 @@ class ApiBuscadorController extends Controller
                 foreach ($servicios as $user) {
 
                     $infoZonaServicio = ZonasServicio::where('zonas_id', $user->zonas_id)
-                        ->where('servicios_id', $user->idServicio)
+                        ->where('servicios_id', $user->id)
                         ->first();
 
                     $saturacionZonaServicio = 0;
@@ -215,7 +217,7 @@ class ApiBuscadorController extends Controller
                     $dato = DB::table('horario_servicio AS h')
                         ->join('servicios AS s', 's.id', '=', 'h.servicios_id')
                         ->where('h.segunda_hora', 1) // segunda hora habilitada
-                        ->where('h.servicios_id', $user->idServicio) // id servicio   1
+                        ->where('h.servicios_id', $user->id) // id servicio   1
                         ->where('h.dia', $diaSemana) // dia   2
                         ->get();
 
@@ -225,7 +227,7 @@ class ApiBuscadorController extends Controller
                         $horario = DB::table('horario_servicio AS h')
                             ->join('servicios AS s', 's.id', '=', 'h.servicios_id')
                             ->where('h.segunda_hora', 1) // segunda hora habilitada
-                            ->where('h.servicios_id', $user->idServicio) // id servicio
+                            ->where('h.servicios_id', $user->id) // id servicio
                             ->where('h.dia', $diaSemana) // dia
                             ->where(function ($query) use ($hora) {
                                 $query->where('h.hora1', '<=' , $hora)
@@ -246,7 +248,7 @@ class ApiBuscadorController extends Controller
                         $horario = DB::table('horario_servicio AS h')
                             ->join('servicios AS s', 's.id', '=', 'h.servicios_id')
                             ->where('h.segunda_hora', 0) // segunda hora habilitada
-                            ->where('h.servicios_id', $user->idServicio) // id servicio
+                            ->where('h.servicios_id', $user->id) // id servicio
                             ->where('h.dia', $diaSemana) // dia
                             ->where(function ($query) use ($hora) {
                                 $query->where('h.hora1', '<=' , $hora)
@@ -262,7 +264,7 @@ class ApiBuscadorController extends Controller
                     }
 
                     // preguntar si este dia esta cerrado
-                    $cerradoHoy = HorarioServicio::where('servicios_id', $user->idServicio)->where('dia', $diaSemana)->first();
+                    $cerradoHoy = HorarioServicio::where('servicios_id', $user->id)->where('dia', $diaSemana)->first();
 
                     if($cerradoHoy->cerrado == 1){
                         $user->cerrado = 1;
@@ -291,7 +293,7 @@ class ApiBuscadorController extends Controller
 
             } catch(\Throwable $e){
                 DB::rollback();
-                return ['success' => 2, 'error '=> 'es; ' . $e];
+                return ['success' => 2];
             }
         }else{
             return ['success' => 2];
