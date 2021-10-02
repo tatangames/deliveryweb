@@ -24,6 +24,7 @@ class CreateOrdenesDescripcionTable extends Migration
             $table->string('nombre', 150);
 
             $table->foreign('ordenes_id')->references('id')->on('ordenes');
+            $table->foreign('producto_id')->references('id')->on('producto');
         });
     }
 

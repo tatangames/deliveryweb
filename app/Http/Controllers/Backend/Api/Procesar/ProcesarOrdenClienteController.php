@@ -404,7 +404,7 @@ class ProcesarOrdenClienteController extends Controller
                 // agarrar todos los productos del carrito
                 $producto = DB::table('producto AS p')
                     ->join('carrito_extra AS c', 'c.producto_id', '=', 'p.id')
-                    ->select('p.id AS productoID', 'c.cantidad', 'p.precio', 'p.activo',
+                    ->select('p.id AS productoID', 'p.nombre', 'c.cantidad', 'p.precio', 'p.activo',
                         'p.disponibilidad', 'c.id AS carritoid', 'c.nota_producto')
                     ->where('c.carrito_temporal_id', $cart->id)
                     ->get();

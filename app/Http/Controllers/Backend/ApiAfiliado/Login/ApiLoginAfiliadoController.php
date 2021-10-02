@@ -35,6 +35,9 @@ class ApiLoginAfiliadoController extends Controller
                     Propietarios::where('id', $p->id)->update(['token_fcm' => $request->tokenfcm]);
                 }
 
+                // setear dedisponibilidad
+                Propietarios::where('id', $p->id)->update(['disponibilidad' => 1]);
+
                 return ['success' => 2, 'id' => $p->id];
             }else{
                 // contraseña incorrecta

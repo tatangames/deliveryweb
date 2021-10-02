@@ -10,7 +10,6 @@
                             <tr>
                                 <th>Nombre</th>
                                 <th>Teléfono</th>
-                                <th>Correo</th>
                                 <th>Disponible</th>
                                 <th>Activo</th>
                                 <th>Token FCM</th>
@@ -23,7 +22,6 @@
                                 <tr>
                                     <td>{{ $dato->nombre }}</td>
                                     <td>{{ $dato->telefono }}</td>
-                                    <td>{{ $dato->correo }}</td>
                                     <td>
                                         @if($dato->disponible == 0)
                                             <span class="badge bg-danger">No disponible</span>

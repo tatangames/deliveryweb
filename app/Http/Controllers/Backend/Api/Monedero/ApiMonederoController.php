@@ -66,10 +66,44 @@ class ApiMonederoController extends Controller
         $d1 = new DateTime($horaEstimada);
         $d2 = new DateTime($today);
 
+        $infoCliente = Cliente::where('id', $request->clienteid)->first();
+
         $comision = $infoAdmin->comision;
 
         $resultado = ($comision * $request->comprar) / 100;
         $pagara = $request->comprar + $resultado;
+
+
+        $fechahoy = Carbon::now('America/El_Salvador');
+
+        // guardar datos
+        $reg = new Monedero();
+        $reg->clientes_id = $request->clienteid;
+        $reg->monedas = $request->comprar;
+        $reg->pago_total = $pagara; // lo que pago al final
+        $reg->fecha = $fechahoy;
+        $reg->comision = $infoAdmin->comision;
+        $reg->nota = null;
+        $reg->idtransaccion = "";
+        $reg->codigo = "";
+        $reg->esreal = 0;
+        $reg->esaprobada = 1;
+        $reg->revisada = 0;
+        $reg->fecha_revisada = null;
+        $reg->correo = $request->correo;
+        $reg->save();
+
+        // actualizar monedero cliente
+        $sumatoria = $request->comprar + $infoCliente->monedero;
+        Cliente::where('id', $request->clienteid)->update(['monedero' => $sumatoria]);
+
+        $sumatoria = number_format((float)$sumatoria, 2, '.', '');
+
+
+        $msj1 = "Su monedero actual es: $" . $sumatoria;
+
+        return ['success' => 3, 'msj1' => $msj1]; // compra exitosa
+
 
 
         $data = array (
@@ -162,9 +196,9 @@ class ApiMonederoController extends Controller
                         Cliente::where('id', $request->clienteid)->update(['monedero' => $sumatoria]);
                         DB::commit();
 
-                        $infoCliente = Cliente::where('id', $sumatoria)->first();
+                        $infoCli = Cliente::where('id', $request->clienteid)->first();
 
-                        $msj1 = "Su monedero actual es: " . $infoCliente->monedero;
+                        $msj1 = "Su monedero actual es: " . $infoCli->monedero;
 
                         return ['success' => 3, 'msj1' => $msj1]; // compra exitosa
                     }else{

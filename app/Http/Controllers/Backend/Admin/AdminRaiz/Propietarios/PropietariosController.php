@@ -21,7 +21,8 @@ class PropietariosController extends Controller
     public function tablaPropietarios(){
         $propi = DB::table('propietarios AS p')
             ->join('servicios AS s', 's.id', '=', 'p.servicios_id')
-            ->select('p.id', 'p.bloqueado', 's.identificador', 'p.codigo', 'p.nombre AS nombrePropi', 'p.disponibilidad', 'p.fecha', 'p.activo', 'p.telefono')
+            ->select('p.id', 'p.bloqueado', 's.identificador', 'p.codigo', 'p.nombre AS nombrePropi',
+                'p.disponibilidad', 'p.fecha', 'p.activo', 'p.telefono')
             ->get();
 
         return view('backend.admin.propietarios.tabla.tablapropietarios', compact('propi'));
@@ -57,7 +58,7 @@ class PropietariosController extends Controller
             $p->correo = $request->correo;
             $p->fecha = $fecha;
             $p->disponibilidad = 0;
-            $p->token_fcm = "0000";
+            $p->token_fcm = null;
             $p->servicios_id = $request->identificador;
             $p->codigo = null;
             $p->activo = 1;

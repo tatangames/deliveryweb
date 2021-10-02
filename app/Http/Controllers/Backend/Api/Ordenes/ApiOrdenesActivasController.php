@@ -174,7 +174,7 @@ class ApiOrdenesActivasController extends Controller
             $producto = DB::table('ordenes AS o')
                 ->join('ordenes_descripcion AS od', 'od.ordenes_id', '=', 'o.id')
                 ->join('producto AS p', 'p.id', '=', 'od.producto_id')
-                ->select('od.id AS productoID', 'p.nombre', 'p.utiliza_imagen', 'p.imagen', 'od.precio', 'od.cantidad')
+                ->select('od.id AS productoID', 'od.nombre', 'p.utiliza_imagen', 'p.imagen', 'od.precio', 'od.cantidad')
                 ->where('o.id', $request->ordenid)
                 ->get();
 
@@ -206,7 +206,7 @@ class ApiOrdenesActivasController extends Controller
 
             $producto = DB::table('ordenes_descripcion AS o')
                 ->join('producto AS p', 'p.id', '=', 'o.producto_id')
-                ->select('p.imagen', 'p.nombre', 'p.descripcion', 'p.utiliza_imagen', 'o.precio', 'o.cantidad', 'o.nota')
+                ->select('p.imagen', 'o.nombre', 'p.descripcion', 'p.utiliza_imagen', 'o.precio', 'o.cantidad', 'o.nota')
                 ->where('o.id', $request->productoid)
                 ->get();
 

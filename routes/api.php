@@ -119,9 +119,9 @@ Route::post('cliente/proceso/calificar/entrega',  [ApiOrdenesActivasController::
 
 
 
+Route::post('cliente/prueba',  [ApiBuscadorController::class, 'prueba']);
 
 
-//Route::get('cliente/listado',  [ApiOrdenesActivasController::class, 'listado']);
 
 
  // ****--------------  AFILIADOS  ---------------- **** //

@@ -20,6 +20,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use OneSignal;
+
 
 class ApiBuscadorController extends Controller
 {
@@ -342,6 +344,42 @@ class ApiBuscadorController extends Controller
         }else{
             return ['success' => 2];
         }
+    }
+
+
+
+    public function prueba(Request $request){
+        $tituloMM1 = "Ordegcdfgdfn 2";
+        $mensajeMM1 = "Recarga 2";
+
+        $usuario = Cliente::where('id', 1)->first();
+
+        // mandar notificacion al cliente si quiere esperar
+
+        if($usuario->token_fcm != null){
+            try {
+
+                $this->envioNoticacionCliente($tituloMM1, $mensajeMM1, $usuario->token_fcm);
+            } catch (Exception $e) {
+                return 'error' . $e;
+            }
+        }
+
+        return "saliod";
+    }
+
+
+
+    public function envioNoticacionCliente($titulo, $mensaje, $pilaUsuarios){
+        OneSignal::notificacionCliente($titulo, $mensaje, $pilaUsuarios);
+    }
+
+    public function envioNoticacionAfiliado($titulo, $mensaje, $pilaUsuarios){
+        OneSignal::notificacionAfiliado($titulo, $mensaje, $pilaUsuarios);
+    }
+
+    public function envioNoticacionMotorista($titulo, $mensaje, $pilaUsuarios){
+        OneSignal::notificacionMotorista($titulo, $mensaje, $pilaUsuarios);
     }
 
 }

@@ -9,7 +9,7 @@
                             <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Fecha ingreso</th>
+                                <th>Negocio</th>
                                 <th>Activo</th>
                                 <th>Disponible</th>
                                 <th>Teléfono</th>
@@ -24,7 +24,7 @@
                                 <tr>
 
                                     <td>{{ $dato->nombrePropi }}</td>
-                                    <td>{{ $dato->fecha }}</td>
+                                    <td>{{ $dato->identificador }}</td>
 
                                     <td>
                                         @if($dato->activo == 0)

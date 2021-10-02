@@ -102,12 +102,7 @@ class ApiOrdenesMotoristaController extends Controller
 
             //sacar direccion de la orden
 
-            $orden = DB::table('ordenes_direcciones AS o')
-                ->select('o.nombre', 'o.direccion',
-                    'o.numero_casa', 'o.punto_referencia',
-                    'o.latitud', 'o.longitud')
-                ->where('o.ordenes_id', $request->ordenid)
-                ->get();
+            $orden = OrdenesDirecciones::where('ordenes_id', $request->ordenid)->get();
 
             $servicioid = $or->servicios_id;
 
@@ -249,7 +244,7 @@ class ApiOrdenesMotoristaController extends Controller
                         $suma = "0.00 (Monedero)";
                     }
 
-                    $o->precio_consumido = number_format((float)$suma, 2, '.', '');
+                    $o->precio_consumido = $suma;
 
 
                     $cupon = "";
@@ -300,7 +295,8 @@ class ApiOrdenesMotoristaController extends Controller
             $producto = DB::table('ordenes AS o')
                 ->join('ordenes_descripcion AS od', 'od.ordenes_id', '=', 'o.id')
                 ->join('producto AS p', 'p.id', '=', 'od.producto_id')
-                ->select('od.id AS productoID', 'p.nombre', 'od.nota', 'p.imagen', 'p.utiliza_imagen', 'od.precio', 'od.cantidad')
+                ->select('od.id AS productoID', 'od.nombre', 'od.nota',
+                    'p.imagen', 'p.utiliza_imagen', 'od.precio', 'od.cantidad')
                 ->where('o.id', $request->ordenid)
                 ->get();
 
@@ -482,14 +478,14 @@ class ApiOrdenesMotoristaController extends Controller
 
                 // DATOS QUE SE COBRARA AL CLIENTE
 
-                $suma = $o->precio_consumido + $o->precio_envio;
-
                 // monedero
                 if($infoOrdenes->metodo_pago == 2){
-                    $suma = 0;
+                    $suma = "0.00 Monedero";
+                }else{
+                    $suma = number_format((float)$o->precio_consumido + $o->precio_envio, 2, '.', '');
                 }
 
-                $o->precio_consumido = number_format((float)$suma, 2, '.', '');
+                $o->precio_consumido = $suma;
 
                 $cupon = "";
                 $aplicoCupon = 0;

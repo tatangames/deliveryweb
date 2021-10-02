@@ -208,7 +208,7 @@ class ApiOrdenesAfiliadoController extends Controller
             $producto = DB::table('ordenes AS o')
                 ->join('ordenes_descripcion AS od', 'od.ordenes_id', '=', 'o.id')
                 ->join('producto AS p', 'p.id', '=', 'od.producto_id')
-                ->select('od.id AS productoID', 'p.nombre', 'od.nota', 'p.utiliza_imagen', 'p.imagen', 'od.precio', 'od.cantidad')
+                ->select('od.id AS productoID', 'od.nombre', 'od.nota', 'p.utiliza_imagen', 'p.imagen', 'od.precio', 'od.cantidad')
                 ->where('o.id', $request->ordenid)
                 ->get();
 
@@ -240,7 +240,7 @@ class ApiOrdenesAfiliadoController extends Controller
 
             $producto = DB::table('ordenes_descripcion AS o')
                 ->join('producto AS p', 'p.id', '=', 'o.producto_id')
-                ->select('p.imagen', 'p.nombre', 'p.descripcion', 'p.utiliza_imagen', 'o.precio', 'o.cantidad', 'o.nota')
+                ->select('p.imagen', 'o.nombre', 'p.descripcion', 'p.utiliza_imagen', 'o.precio', 'o.cantidad', 'o.nota')
                 ->where('o.id', $request->ordenesid)
                 ->get();
 
@@ -390,7 +390,7 @@ class ApiOrdenesAfiliadoController extends Controller
                     // mandar notificacion a los motoristas asignados al servicio
                     $moto = DB::table('motoristas_asignados AS ms')
                         ->join('motoristas AS m', 'm.id', '=', 'ms.motoristas_id')
-                        ->select('m.activo', 'm.disponible', 'ms.servicios_id', 'm.device_id')
+                        ->select('m.activo', 'm.disponible', 'ms.servicios_id', 'm.token_fcm')
                         ->where('m.activo', 1)
                         ->where('m.disponible', 1)
                         ->where('ms.servicios_id', $or->servicios_id)
@@ -415,7 +415,7 @@ class ApiOrdenesAfiliadoController extends Controller
 
                     if($usuario->token_fcm != null){
                         try {
-                            $this->envioNoticacionCliente($tituloC1, $mensajeC2, $usuario->token_fcm);
+                            $this->envioNoticacionCliente($tituloC1, $mensajeC1, $usuario->token_fcm);
                         } catch (Exception $e) {
 
                         }
@@ -701,7 +701,7 @@ class ApiOrdenesAfiliadoController extends Controller
 
             // SIGNIFICA QUE NO TIENE MOTORISTA ASIGNADO AUN LA ORDEN
             // MANDAR NOTIFICACION AL MOTORISTA QUE YA ESTA LA ORDEN
-            if($hay == 0) {
+            if($hay == 1) {
 
                 $moto = DB::table('motoristas_asignados AS ms')
                     ->join('motoristas AS m', 'm.id', '=', 'ms.motoristas_id')
@@ -712,8 +712,8 @@ class ApiOrdenesAfiliadoController extends Controller
 
                 $pilaMoto = array();
 
-                $tituloCC1 = "Orden urgente";
-                $mensajeCC1 = "Una nueva orden no tiene motorista";
+                $tituloCC1 = "Orden " . $o->id;
+                $mensajeCC1 = "Lista para ser entregada";
 
                 foreach ($moto as $p) {
                     if ($p->token_fcm != null) {

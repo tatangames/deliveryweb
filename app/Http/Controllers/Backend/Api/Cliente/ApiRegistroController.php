@@ -50,7 +50,9 @@ class ApiRegistroController extends Controller
 
         if($usuario->save()){
 
-            $token = JWTAuth::fromUser($usuario);
+            //$token = JWTAuth::fromUser($usuario);
+
+            $token = "111";
 
             return ['success'=> 2, 'id'=> strval($usuario->id), 'token' => $token];
 
