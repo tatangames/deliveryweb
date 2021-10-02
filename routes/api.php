@@ -117,6 +117,7 @@ Route::post('cliente/buscador/producto/servicio',  [ApiBuscadorController::class
 
 Route::post('cliente/proceso/calificar/entrega',  [ApiOrdenesActivasController::class, 'calificarEntrega']);
 
+Route::post('cliente/proceso/orden/estado-3', [ApiOrdenesAfiliadoController::class, 'procesarOrdenEstado3']);
 
 
 Route::post('cliente/prueba',  [ApiBuscadorController::class, 'prueba']);
@@ -164,8 +165,6 @@ Route::post('afiliado/cancelar/orden', [ApiOrdenesAfiliadoController::class, 'ca
 Route::post('afiliado/borrar/orden', [ApiOrdenesAfiliadoController::class, 'borrarOrden']);
 
 Route::post('afiliado/proceso/orden/estado-2', [ApiOrdenesAfiliadoController::class, 'procesarOrdenEstado2']);
-
-Route::post('cliente/proceso/orden/estado-3', [ApiOrdenesAfiliadoController::class, 'procesarOrdenEstado3']);
 
 
 Route::post('afiliado/proceso/orden/estado-4', [ApiOrdenesAfiliadoController::class, 'procesarOrdenEstado4']);

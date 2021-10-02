@@ -70,9 +70,6 @@ class ApiBuscadorController extends Controller
             // todos los id de servicios validos
             $zonaServicio = ZonasServicio::where('zonas_id', $infoDireccion->zonas_id)->get();
 
-            // listado de etiquetas
-            $listaEtiquetas = Etiquetas::all();
-
             $pilaServicios = array();
 
             // obtener un x numero de etiquetas validas en todos los servicios que el cliente
@@ -127,14 +124,6 @@ class ApiBuscadorController extends Controller
 
             try {
 
-                $fecha = Carbon::now('America/El_Salvador');
-
-                // guardar palabra clave
-                $pa = new PalabrasBuscador();
-                $pa->clientes_id = $request->id;
-                $pa->fecha = $fecha;
-                $pa->nombre = $request->nombre;
-                $pa->save();
 
                 // buscar zona de direccion del cliente
                 $infoDireccion = DireccionCliente::where('clientes_id', $request->id)
