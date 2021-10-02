@@ -13,7 +13,6 @@
                                 <th>Correo</th>
                                 <th>Disponible</th>
                                 <th>Activo</th>
-                                <th>Dinero Límite</th>
                                 <th>Token FCM</th>
                                 <th>Opciones</th>
                             </tr>
@@ -39,7 +38,6 @@
                                             <span class="badge bg-primary">Activo</span>
                                         @endif
                                     </td>
-                                    <td>{{ $dato->limite_dinero }}</td>
                                     <td>{{ $dato->token_fcm }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{ $dato->id }})">
